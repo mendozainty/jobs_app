@@ -26,6 +26,7 @@ class _LoginViewState extends State<LoginView> {
                   .pushNamedAndRemoveUntil(loginEmailRoute, (_) => false);
             }),
             SignInButton(Buttons.Google, onPressed: () async {
+              // TODO implement android settings
               try {
                 final credential =
                     await AuthService.firebase().signInGoogle(context: context);
@@ -64,6 +65,7 @@ class _LoginViewState extends State<LoginView> {
             }),
             // SignInButton(Buttons.Apple, onPressed: () {}),
             SignInButton(Buttons.Facebook, onPressed: () async {
+              // TODO implement android settings
               final credential =
                   await AuthService.firebase().signInFB(context: context);
               if (credential != null) {
