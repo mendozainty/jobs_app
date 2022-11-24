@@ -1,18 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
-@immutable
 class AuthUser {
   final String? displayName;
   final String? email;
   final String? photoURL;
   final String? phoneNumber;
-  final bool isEmailVerified;
+  late bool? emailVerified;
   final String? uid;
 
-  const AuthUser(
+  AuthUser(
     this.displayName,
-    this.isEmailVerified,
+    this.emailVerified,
     this.email,
     this.photoURL,
     this.phoneNumber,

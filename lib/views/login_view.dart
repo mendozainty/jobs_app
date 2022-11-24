@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jobs_app/constants/routes.dart';
@@ -41,27 +42,11 @@ class _LoginViewState extends State<LoginView> {
                         .sigInCredential(credential)
                         .then((value) {
                       final user = AuthService.firebase().currentUser;
-                      DbService.firestore().initializeDb();
-                      final dbUser = DbUser(
-                          uid: user?.uid,
-                          name: user?.displayName,
-                          email: user?.email,
-                          phone: user?.phoneNumber,
-                          photoUrl: user?.photoURL);
-                      try {
-                        final docRef =
-                            DbService.firestore().addUser('users', dbUser);
-                        if (docRef != null) {
-                          return docRef;
-                        } else {
-                          return null;
-                        }
-                      } catch (e) {
-                        print(e);
-                      }
-
                       if (user != null) {
-                        if (user.isEmailVerified) {
+                        final docRef =
+                            DbService.firestore().addUser('users', user);
+                        print(docRef);
+                        if (user.emailVerified = true) {
                           Navigator.of(context)
                               .pushNamedAndRemoveUntil(jobsRoute, (_) => false);
                         } else {
@@ -103,7 +88,7 @@ class _LoginViewState extends State<LoginView> {
                     AuthService.firebase().sendEmailVerification();
 
                     if (user != null) {
-                      if (user.isEmailVerified) {
+                      if (user.emailVerified = true) {
                         Navigator.of(context)
                             .pushNamedAndRemoveUntil(jobsRoute, (_) => false);
                       } else {

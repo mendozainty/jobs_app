@@ -14,9 +14,6 @@ class DbService implements DbProvider {
   }
 
   @override
-  initializeDb() => provider.initializeDb();
-
-  @override
   Future<DocumentReference<Object?>?> getDoc() => provider.getDoc();
 
   @override
