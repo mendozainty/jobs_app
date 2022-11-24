@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
@@ -11,10 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart'
         FacebookAuthProvider,
         FirebaseAuth,
         FirebaseAuthException,
-        GoogleAuthCredential,
-        GoogleAuthProvider,
-        OAuthCredential;
-
+        GoogleAuthProvider;
 import '../../firebase_options.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
@@ -137,26 +135,21 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  Future<AuthCredential?> signInGoogle({required BuildContext context}) async {
+  Future<GoogleSignInAccount?> logInGoogle(
+      {required BuildContext context}) async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
     final GoogleSignInAccount? googleSignInAccount =
         await googleSignIn.signIn();
     if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-      return credential;
+      print(googleSignInAccount);
+      return googleSignInAccount;
     } else {
       throw GenericAuthException();
     }
   }
 
   @override
-  Future<AuthCredential?> signInFB({required BuildContext context}) async {
+  Future<FacebookAccessToken?> logInFB({required BuildContext context}) async {
     final fb = FacebookLogin();
     final res = await fb.logIn(permissions: [
       FacebookPermission.publicProfile,
@@ -167,10 +160,7 @@ class FirebaseAuthProvider implements AuthProvider {
       case FacebookLoginStatus.success:
         final FacebookAccessToken? accessToken = res.accessToken;
         if (accessToken != null) {
-          final token = accessToken.token;
-          final AuthCredential credential =
-              FacebookAuthProvider.credential(token);
-          return credential;
+          return accessToken;
         }
         break;
       case FacebookLoginStatus.cancel:
@@ -179,5 +169,30 @@ class FirebaseAuthProvider implements AuthProvider {
         throw GenericAuthException();
     }
     return null;
+  }
+
+  @override
+  Future<AuthCredential?> oAuthFB(accessToken) async {
+    final token = accessToken;
+    final AuthCredential authCredential =
+        FacebookAuthProvider.credential(token);
+    if (authCredential != null) return authCredential;
+    return null;
+  }
+
+  @override
+  Future<AuthCredential?> oAuthGoogle(googleSignInAccount) async {
+    try {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+      return credential;
+    } catch (e) {
+      throw GenericAuthException();
+    }
   }
 }

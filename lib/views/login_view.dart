@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jobs_app/constants/routes.dart';
 import 'package:jobs_app/services/auth/auth_exceptions.dart';
 import 'package:jobs_app/services/auth/auth_services.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:jobs_app/services/db/db_service.dart';
+import 'package:jobs_app/services/db/user_schema.dart';
 import '../utilities/show_error_dialog.dart';
 import '../constants/appBar_view.dart';
 
@@ -23,19 +26,40 @@ class _LoginViewState extends State<LoginView> {
           children: [
             SignInButton(Buttons.Email, onPressed: () {
               Navigator.of(context)
-                  .pushNamedAndRemoveUntil(loginEmailRoute, (_) => false);
+                  .pushNamedAndRemoveUntil(registerRoute, (_) => false);
             }),
             SignInButton(Buttons.Google, onPressed: () async {
               // TODO implement android settings
               try {
-                final credential =
-                    await AuthService.firebase().signInGoogle(context: context);
+                final GoogleSignInAccount? googleSignInAccount =
+                    await AuthService.firebase().logInGoogle(context: context);
+                final credential = await AuthService.firebase()
+                    .oAuthGoogle(googleSignInAccount);
                 if (credential != null) {
                   try {
                     await AuthService.firebase()
                         .sigInCredential(credential)
                         .then((value) {
                       final user = AuthService.firebase().currentUser;
+                      DbService.firestore().initializeDb();
+                      final dbUser = DbUser(
+                          uid: user?.uid,
+                          name: user?.displayName,
+                          email: user?.email,
+                          phone: user?.phoneNumber,
+                          photoUrl: user?.photoURL);
+                      try {
+                        final docRef =
+                            DbService.firestore().addUser('users', dbUser);
+                        if (docRef != null) {
+                          return docRef;
+                        } else {
+                          return null;
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+
                       if (user != null) {
                         if (user.isEmailVerified) {
                           Navigator.of(context)
@@ -66,19 +90,26 @@ class _LoginViewState extends State<LoginView> {
             // SignInButton(Buttons.Apple, onPressed: () {}),
             SignInButton(Buttons.Facebook, onPressed: () async {
               // TODO implement android settings
+              final token =
+                  await AuthService.firebase().logInFB(context: context);
               final credential =
-                  await AuthService.firebase().signInFB(context: context);
+                  await AuthService.firebase().oAuthFB(token?.token);
               if (credential != null) {
                 try {
                   await AuthService.firebase()
                       .sigInCredential(credential)
                       .then((value) {
                     final user = AuthService.firebase().currentUser;
+                    AuthService.firebase().sendEmailVerification();
+
                     if (user != null) {
-                      Navigator.of(context)
-                          .pushNamedAndRemoveUntil(jobsRoute, (_) => false);
-                    } else {
-                      throw GenericAuthException();
+                      if (user.isEmailVerified) {
+                        Navigator.of(context)
+                            .pushNamedAndRemoveUntil(jobsRoute, (_) => false);
+                      } else {
+                        Navigator.of(context)
+                            .pushNamedAndRemoveUntil(verifyRoute, (_) => false);
+                      }
                     }
                   });
                 } on UserNotFoundAuthException {

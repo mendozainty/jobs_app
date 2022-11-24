@@ -19,7 +19,7 @@ class AppBarCustom extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title),
-      backgroundColor: Color.fromARGB(255, 247, 193, 31),
+      backgroundColor: const Color.fromARGB(255, 247, 193, 31),
       actions: [
         PopupMenuButton<MenuAction>(
           onSelected: (value) async {

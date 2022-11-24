@@ -1,5 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
+/* import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_login_facebook/src/models/facebook_access_token.dart';
 import 'package:jobs_app/services/auth/auth_exceptions.dart';
 import 'package:jobs_app/services/auth/auth_provider.dart';
 import 'package:jobs_app/services/auth/auth_user.dart';
@@ -145,4 +147,29 @@ class MockAuthProvider implements AuthProvider {
     // TODO: implement signInGoogle
     throw UnimplementedError();
   }
+
+  @override
+  Future<FacebookAccessToken?> logInFB({required BuildContext context}) {
+    // TODO: implement logInFB
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GoogleSignInAccount?> logInGoogle({required BuildContext context}) {
+    // TODO: implement logInGoogle
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<AuthCredential?> oAuthFB(token) {
+    // TODO: implement oAuthFB
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<AuthCredential?> oAuthGoogle(googleSignInAccount) {
+    // TODO: implement oAuthGoogle
+    throw UnimplementedError();
+  }
 }
+ */

@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jobs_app/services/auth/auth_provider.dart';
 import 'package:jobs_app/services/auth/auth_user.dart';
 import 'package:jobs_app/services/auth/firebase_auth_provider.dart';
@@ -49,10 +51,17 @@ class AuthService implements AuthProvider {
       provider.sigInCredential(userCredential);
 
   @override
-  Future<AuthCredential?> signInGoogle({required BuildContext context}) =>
-      provider.signInGoogle(context: context);
+  Future<FacebookAccessToken?> logInFB({required BuildContext context}) =>
+      provider.logInFB(context: context);
 
   @override
-  Future<AuthCredential?> signInFB({required BuildContext context}) =>
-      provider.signInFB(context: context);
+  Future<AuthCredential?> oAuthFB(token) => provider.oAuthFB(token);
+
+  @override
+  Future<GoogleSignInAccount?> logInGoogle({required BuildContext context}) =>
+      provider.logInGoogle(context: context);
+
+  @override
+  Future<AuthCredential?> oAuthGoogle(googleSignInAccount) =>
+      provider.oAuthGoogle(googleSignInAccount);
 }
