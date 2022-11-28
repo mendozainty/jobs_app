@@ -3,6 +3,8 @@ import 'package:jobs_app/constants/appBar_view.dart';
 import '../constants/routes.dart';
 import '../services/auth/auth_exceptions.dart';
 import '../services/auth/auth_services.dart';
+import '../services/db/db_exceptions.dart';
+import '../services/db/db_service.dart';
 import '../utilities/show_error_dialog.dart';
 
 class LoginEmailView extends StatefulWidget {
@@ -60,7 +62,30 @@ class _LoginEmailViewState extends State<LoginEmailView> {
                       .then((value) {
                     final user = AuthService.firebase().currentUser;
                     if (user != null) {
-                      if (user.emailVerified = true) {
+                      try {
+                        final Object docRef =
+                            DbService.firestore().addUser('users');
+                      } on AlreadyExistsFirestoreExcetions {
+                        showErrDialog(
+                            context, 'Dado já existente no Banco de Dados');
+                      } on OperationCancelledFirestoreExceptions {
+                        showErrDialog(context, 'Operação Cancelada');
+                      } on DocNotFoundFirestoreExceptions {
+                        showErrDialog(context, 'Dado não encontrado');
+                      } on PermissionDeniedFirestoreExceptions {
+                        showErrDialog(
+                            context, 'Sem permissão para esse operação');
+                      } on UnauthenticatedFirestoreExceptions {
+                        showErrDialog(
+                            context, 'Você não está autenticado no sistema');
+                      } on UnavailableFirestoreExceptios {
+                        showErrDialog(
+                            context, 'Serviço temporariamente indisponível');
+                      } catch (err) {
+                        showErrDialog(context, 'Erro na operação');
+                      }
+
+                      if (user.isEmailVerified) {
                         Navigator.of(context)
                             .pushNamedAndRemoveUntil(jobsRoute, (_) => false);
                       } else {

@@ -3,12 +3,15 @@ import 'package:jobs_app/services/db/user_schema.dart';
 
 abstract class DbProvider {
   final String collection;
-  final DbUser userData;
-  DbProvider(this.collection, this.userData);
+  final Stream<QuerySnapshot<Map<String, dynamic>>> userStream;
 
-  Future<DocumentReference?> getDoc();
-  Future<DocumentReference?> addUser(
+  DbProvider(
+    this.collection,
+    this.userStream,
+  );
+
+  Future<DocumentReference?> getUser(collection);
+  Future<void> addUser(
     collection,
-    userData,
   );
 }

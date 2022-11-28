@@ -1,12 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jobs_app/constants/routes.dart';
 import 'package:jobs_app/services/auth/auth_exceptions.dart';
 import 'package:jobs_app/services/auth/auth_services.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:jobs_app/services/db/db_exceptions.dart';
 import 'package:jobs_app/services/db/db_service.dart';
-import 'package:jobs_app/services/db/user_schema.dart';
 import '../utilities/show_error_dialog.dart';
 import '../constants/appBar_view.dart';
 
@@ -42,11 +41,32 @@ class _LoginViewState extends State<LoginView> {
                         .sigInCredential(credential)
                         .then((value) {
                       final user = AuthService.firebase().currentUser;
+
                       if (user != null) {
-                        final docRef =
-                            DbService.firestore().addUser('users', user);
-                        print(docRef);
-                        if (user.emailVerified = true) {
+                        try {
+                          final Object docRef =
+                              DbService.firestore().addUser('users');
+                        } on AlreadyExistsFirestoreExcetions {
+                          showErrDialog(
+                              context, 'Dado já existente no Banco de Dados');
+                        } on OperationCancelledFirestoreExceptions {
+                          showErrDialog(context, 'Operação Cancelada');
+                        } on DocNotFoundFirestoreExceptions {
+                          showErrDialog(context, 'Dado não encontrado');
+                        } on PermissionDeniedFirestoreExceptions {
+                          showErrDialog(
+                              context, 'Sem permissão para esse operação');
+                        } on UnauthenticatedFirestoreExceptions {
+                          showErrDialog(
+                              context, 'Você não está autenticado no sistema');
+                        } on UnavailableFirestoreExceptios {
+                          showErrDialog(
+                              context, 'Serviço temporariamente indisponível');
+                        } catch (err) {
+                          showErrDialog(context, 'Erro na operação');
+                        }
+
+                        if (user.isEmailVerified) {
                           Navigator.of(context)
                               .pushNamedAndRemoveUntil(jobsRoute, (_) => false);
                         } else {
@@ -85,10 +105,32 @@ class _LoginViewState extends State<LoginView> {
                       .sigInCredential(credential)
                       .then((value) {
                     final user = AuthService.firebase().currentUser;
-                    AuthService.firebase().sendEmailVerification();
 
                     if (user != null) {
-                      if (user.emailVerified = true) {
+                      try {
+                        final Object docRef =
+                            DbService.firestore().addUser('users');
+                      } on AlreadyExistsFirestoreExcetions {
+                        showErrDialog(
+                            context, 'Dado já existente no Banco de Dados');
+                      } on OperationCancelledFirestoreExceptions {
+                        showErrDialog(context, 'Operação Cancelada');
+                      } on DocNotFoundFirestoreExceptions {
+                        showErrDialog(context, 'Dado não encontrado');
+                      } on PermissionDeniedFirestoreExceptions {
+                        showErrDialog(
+                            context, 'Sem permissão para esse operação');
+                      } on UnauthenticatedFirestoreExceptions {
+                        showErrDialog(
+                            context, 'Você não está autenticado no sistema');
+                      } on UnavailableFirestoreExceptios {
+                        showErrDialog(
+                            context, 'Serviço temporariamente indisponível');
+                      } catch (err) {
+                        showErrDialog(context, 'Erro na operação');
+                      }
+
+                      if (user.isEmailVerified) {
                         Navigator.of(context)
                             .pushNamedAndRemoveUntil(jobsRoute, (_) => false);
                       } else {

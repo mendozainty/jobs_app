@@ -1,46 +1,57 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:jobs_app/services/auth/auth_services.dart';
 import 'package:jobs_app/services/db/db_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jobs_app/services/db/user_schema.dart';
 
 class FirestoreDbProvider implements DbProvider {
-  final db = FirebaseFirestore.instance;
-
-  @override
-  Future<DocumentReference<Object?>?> getDoc() {
-    // TODO: implement getDoc
-    throw UnimplementedError();
-  }
-
   @override
   // TODO: implement collection
   String get collection => throw UnimplementedError();
 
   @override
-  Future<DocumentReference<Object?>?> addUser(collection, userData) async {
-    var user = userData;
-    user = FirebaseAuth.instance.currentUser;
-    final dbuser = DbUser(
-        uid: FirebaseAuth.instance.currentUser?.uid,
-        name: FirebaseAuth.instance.currentUser?.displayName,
-        email: user?.email,
-        phone: user?.phoneNumber,
-        photoUrl: user?.photoURL,
-        isManager: false);
+  Future<void> addUser(collection) {
+    final db = FirebaseFirestore.instance;
+    final users = db.collection(collection);
+    final uid = AuthService.firebase().currentUser?.uid;
+    final name = AuthService.firebase().currentUser?.name;
+    final email = AuthService.firebase().currentUser?.email;
+    final phone = AuthService.firebase().currentUser?.phone;
+    final photoUrl = AuthService.firebase().currentUser?.photoUrl;
+    var isManager = false;
+    final dbuser = <String, dynamic>{
+      'uid': uid,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'photoUrl': photoUrl,
+      'isManager': isManager,
+      'timestamp': FieldValue.serverTimestamp(),
+    };
 
-    final docRef = db
-        .collection('users')
-        .withConverter(
-          fromFirestore: DbUser.fromFirestore,
-          toFirestore: (DbUser dbuser, options) => dbuser.toFirestore(),
-        )
-        .doc(dbuser.name);
-    await docRef.set(dbuser);
-    print(docRef.id);
+    final docRef = users.doc(email).set(dbuser);
     return docRef;
   }
 
   @override
-  // TODO: implement userData
-  DbUser get userData => throw UnimplementedError();
+  Future<DocumentReference<Object?>?> getUser(collection) async {
+    final db = FirebaseFirestore.instance;
+    final users = db.collection(collection);
+    final email = AuthService.firebase().currentUser?.email;
+    final docRef = users.doc(email);
+    await docRef.get().then((DocumentSnapshot doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      print(data);
+      if (data != null) {
+        return data;
+      }
+      return null;
+    });
+    return null;
+  }
+
+  @override
+  Stream<QuerySnapshot<Map<String, dynamic>>> get userStream {
+    final userStream =
+        FirebaseFirestore.instance.collection('users').snapshots();
+    return userStream;
+  }
 }

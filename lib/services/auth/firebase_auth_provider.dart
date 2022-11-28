@@ -141,7 +141,6 @@ class FirebaseAuthProvider implements AuthProvider {
     final GoogleSignInAccount? googleSignInAccount =
         await googleSignIn.signIn();
     if (googleSignInAccount != null) {
-      print(googleSignInAccount);
       return googleSignInAccount;
     } else {
       throw GenericAuthException();

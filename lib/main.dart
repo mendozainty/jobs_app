@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jobs_app/services/auth/auth_services.dart';
+import 'package:jobs_app/services/auth/auth_user.dart';
 import 'package:jobs_app/views/jobs_view.dart';
 import 'package:jobs_app/views/login_email.dart';
 import 'package:jobs_app/views/login_view.dart';
@@ -41,7 +42,7 @@ class HomePage extends StatelessWidget {
             case ConnectionState.done:
               final user = AuthService.firebase().currentUser;
               if (user != null) {
-                if (user.emailVerified = true) {
+                if (user.isEmailVerified) {
                   return const Jobs();
                 } else {
                   return const VerifyEmailView();

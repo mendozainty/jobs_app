@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jobs_app/services/db/db_provider.dart';
-import 'package:jobs_app/services/db/user_schema.dart';
 
 import 'firestore_db_provider.dart';
 
@@ -14,20 +13,19 @@ class DbService implements DbProvider {
   }
 
   @override
-  Future<DocumentReference<Object?>?> getDoc() => provider.getDoc();
-
-  @override
-  Future<DocumentReference<Object?>?> addUser(collection, data) =>
-      provider.addUser(
+  Future<void> addUser(collection) => provider.addUser(
         collection,
-        data,
       );
 
   @override
-  // TODO: implement collection
   String get collection => provider.collection;
 
   @override
-  // TODO: implement data
-  DbUser get userData => provider.userData;
+  Future<DocumentReference<Object?>?> getUser(collection) => provider.getUser(
+        collection,
+      );
+
+  @override
+  Stream<QuerySnapshot<Map<String, dynamic>>> get userStream =>
+      provider.userStream;
 }
