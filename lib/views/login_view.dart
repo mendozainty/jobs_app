@@ -68,7 +68,7 @@ class _LoginViewState extends State<LoginView> {
 
                         if (user.isEmailVerified) {
                           Navigator.of(context)
-                              .pushNamedAndRemoveUntil(jobsRoute, (_) => false);
+                              .pushNamedAndRemoveUntil(userRoute, (_) => false);
                         } else {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               verifyRoute, (_) => false);
@@ -132,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
 
                       if (user.isEmailVerified) {
                         Navigator.of(context)
-                            .pushNamedAndRemoveUntil(jobsRoute, (_) => false);
+                            .pushNamedAndRemoveUntil(userRoute, (_) => false);
                       } else {
                         Navigator.of(context)
                             .pushNamedAndRemoveUntil(verifyRoute, (_) => false);

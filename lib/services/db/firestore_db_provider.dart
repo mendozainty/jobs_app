@@ -3,13 +3,10 @@ import 'package:jobs_app/services/db/db_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreDbProvider implements DbProvider {
-  @override
-  // TODO: implement collection
-  String get collection => throw UnimplementedError();
+  final db = FirebaseFirestore.instance;
 
   @override
   Future<void> addUser(collection) {
-    final db = FirebaseFirestore.instance;
     final users = db.collection(collection);
     final uid = AuthService.firebase().currentUser?.uid;
     final name = AuthService.firebase().currentUser?.name;
@@ -54,4 +51,13 @@ class FirestoreDbProvider implements DbProvider {
         FirebaseFirestore.instance.collection('users').snapshots();
     return userStream;
   }
+
+  @override
+  CollectionReference<Map<String, dynamic>> collection(collectionPath) {
+    return FirebaseFirestore.instance.collection(collectionPath);
+  }
+
+  @override
+  // TODO: implement collectionPath
+  String get collectionPath => throw UnimplementedError();
 }

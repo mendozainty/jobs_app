@@ -5,3 +5,4 @@ const registerRoute = '/register';
 const verifyRoute = '/verify';
 const verifEmailSentRoute = '/emailSent';
 const loginEmailRoute = '/loginEmail';
+const userRoute = '/user/';

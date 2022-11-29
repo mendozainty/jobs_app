@@ -5,6 +5,7 @@ import 'package:jobs_app/views/jobs_view.dart';
 import 'package:jobs_app/views/login_email.dart';
 import 'package:jobs_app/views/login_view.dart';
 import 'package:jobs_app/views/register_view.dart';
+import 'package:jobs_app/views/user_view.dart';
 import 'package:jobs_app/views/verificationSent_view.dart';
 import 'package:jobs_app/views/verifyEmail_view.dart';
 
@@ -26,6 +27,7 @@ void main() {
         homeRoute: (context) => const HomePage(),
         verifEmailSentRoute: (context) => const VerificationSent(),
         loginEmailRoute: (context) => const LoginEmailView(),
+        userRoute: (context) => const UserView(),
       }));
 }
 
@@ -43,7 +45,7 @@ class HomePage extends StatelessWidget {
               final user = AuthService.firebase().currentUser;
               if (user != null) {
                 if (user.isEmailVerified) {
-                  return const Jobs();
+                  return const UserView();
                 } else {
                   return const VerifyEmailView();
                 }

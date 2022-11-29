@@ -20,7 +20,7 @@ class VerificationSent extends StatelessWidget {
               onPressed: () async {
                 await AuthService.firebase().logout();
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                  homeRoute,
+                  userRoute,
                   (_) => false,
                 );
               },

@@ -18,14 +18,14 @@ class DbService implements DbProvider {
       );
 
   @override
-  String get collection => provider.collection;
-
-  @override
   Future<DocumentReference<Object?>?> getUser(collection) => provider.getUser(
         collection,
       );
 
   @override
-  Stream<QuerySnapshot<Map<String, dynamic>>> get userStream =>
-      provider.userStream;
+  CollectionReference<Map<String, dynamic>> collection(collectionPath) =>
+      provider.collection(collectionPath);
+
+  @override
+  String get collectionPath => provider.collectionPath;
 }
