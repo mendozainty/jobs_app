@@ -1,6 +1,7 @@
 import 'package:jobs_app/services/auth/auth_services.dart';
 import 'package:jobs_app/services/db/db_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:jobs_app/services/db/db_service.dart';
 
 class FirestoreDbProvider implements DbProvider {
   final db = FirebaseFirestore.instance;
@@ -22,6 +23,11 @@ class FirestoreDbProvider implements DbProvider {
       'photoUrl': photoUrl,
       'isManager': isManager,
       'timestamp': FieldValue.serverTimestamp(),
+      'artisticNickName': null,
+      'rg': null,
+      'cpf': null,
+      'birthDate': null,
+      'address': null,
     };
 
     final docRef = users.doc(email).set(dbuser);
@@ -30,13 +36,11 @@ class FirestoreDbProvider implements DbProvider {
 
   @override
   Future<DocumentReference<Object?>?> getUser(collection) async {
-    final db = FirebaseFirestore.instance;
     final users = db.collection(collection);
     final email = AuthService.firebase().currentUser?.email;
     final docRef = users.doc(email);
     await docRef.get().then((DocumentSnapshot doc) {
       final data = doc.data() as Map<String, dynamic>;
-      print(data);
       if (data != null) {
         return data;
       }
@@ -60,4 +64,18 @@ class FirestoreDbProvider implements DbProvider {
   @override
   // TODO: implement collectionPath
   String get collectionPath => throw UnimplementedError();
+
+  @override
+  Future<void> updateUser(json) {
+    try {
+      db
+          .collection('users')
+          .doc(AuthService.firebase().currentUser?.email)
+          .update(json);
+    } catch (e) {
+      print(e);
+    }
+
+    return DbService.firestore().getUser('users');
+  }
 }

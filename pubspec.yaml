@@ -41,6 +41,9 @@ dependencies:
   flutter_signin_button: ^2.0.0
   flutter_login_facebook: ^1.6.2
   cloud_firestore: ^4.1.0
+  google_fonts: ^3.0.1
+  geocoding: ^2.0.5
+  google_maps_flutter: ^2.2.1
 
 dev_dependencies:
   flutter_test:

@@ -28,4 +28,7 @@ class DbService implements DbProvider {
 
   @override
   String get collectionPath => provider.collectionPath;
+
+  @override
+  Future<void> updateUser(json) => provider.updateUser(json);
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jobs_app/services/auth/auth_services.dart';
-import 'package:jobs_app/services/auth/auth_user.dart';
 import 'package:jobs_app/views/jobs_view.dart';
 import 'package:jobs_app/views/login_email.dart';
 import 'package:jobs_app/views/login_view.dart';
@@ -8,6 +7,7 @@ import 'package:jobs_app/views/register_view.dart';
 import 'package:jobs_app/views/user_view.dart';
 import 'package:jobs_app/views/verificationSent_view.dart';
 import 'package:jobs_app/views/verifyEmail_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'constants/routes.dart';
 
@@ -16,7 +16,11 @@ void main() {
   runApp(MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: Colors.indigo.shade400,
         primarySwatch: Colors.blue,
+        fontFamily: 'Mukta',
+        textTheme: GoogleFonts.muktaTextTheme(),
       ),
       home: const HomePage(),
       routes: {

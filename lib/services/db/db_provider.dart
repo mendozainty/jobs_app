@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jobs_app/services/db/user_schema.dart';
 
 abstract class DbProvider {
   final String collectionPath;
@@ -15,4 +14,5 @@ abstract class DbProvider {
   Future<void> addUser(
     collection,
   );
+  Future<void> updateUser(json);
 }
