@@ -3,7 +3,6 @@
 *.log
 *.pyc
 *.swp
-*.plist
 .DS_Store
 .atom/
 .buildlog/
@@ -35,8 +34,8 @@ migrate_working_dir/
 
 
 #ios
-/ios/Runner/GoogleService-Info.plist
-/ios/Runner/Info.plist
+ios/Runner/
+
 
 # Symbolication related
 app.*.symbols
